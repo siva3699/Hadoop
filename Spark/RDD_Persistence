@@ -16,3 +16,47 @@ Here are some differences between the two options
 , 100MB data cached could consume 350MB memory
 3.can put pressure in JVM and JVM garbage collection             3.less pressure	   
 4.usage:rdd.persist(StorageLevel.MEMORY_ONLY) or rdd.cache()     4.usage:rdd.persist(StorageLevel.MEMORY_ONLY_SER)
+
+
+
+MEMORY_ONLY	
+Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, 
+some partitions will not be cached and will be recomputed on the fly each time they're needed. This is the default level.
+
+MEMORY_AND_DISK	
+Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory,
+store the partitions that don't fit on disk, and read them from there when they're needed.
+
+MEMORY_ONLY_SER 
+(Java and Scala)	Store RDD as serialized Java objects (one byte array per partition). 
+This is generally more space-efficient than deserialized objects, especially when using a fast serializer, 
+but more CPU-intensive to read.
+
+MEMORY_AND_DISK_SER 
+(Java and Scala)	Similar to MEMORY_ONLY_SER, 
+but spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they're needed.
+
+DISK_ONLY	Store the RDD partitions only on disk.
+
+MEMORY_ONLY_2, MEMORY_AND_DISK_2, etc.	
+Same as the levels above, but replicate each partition on two cluster nodes.
+OFF_HEAP (experimental)	Similar to MEMORY_ONLY_SER, but store the data in off-heap memory. 
+This requires off-heap memory to be enabled.
+
+
+
+ex:-
+
+val x = sc.parallelize(List("spark", "rdd", "example",  "sample", "example"), 3)
+val y = x.map( x => (x, x.length))
+
+import  org.apache.spark.storage.StorageLevel
+
+y.persist(StorageLevel.MEMORY_ONLY)
+
+or 
+
+y.persist(StorageLevel.DISK_ONLY)
+
+
+
