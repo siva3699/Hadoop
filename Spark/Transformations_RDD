@@ -29,3 +29,6 @@ Operation filter is take predicate f(x) as an argument which is some thing like 
 it means it will return true for even elements and false for odd elements. 
 RDD Y is a resulting RDD which will have the filtered (i.e. even elements).
 
+filter(x => x.isEmpty)
+filter(y => y.nonEmpty)
+filter(z => z.contains("string to search"))
