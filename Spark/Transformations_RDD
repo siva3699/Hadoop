@@ -30,5 +30,13 @@ it means it will return true for even elements and false for odd elements.
 RDD Y is a resulting RDD which will have the filtered (i.e. even elements).
 
 filter(x => x.isEmpty)
+
+#### to filter the empty strings from RDD ###
+
 filter(y => y.nonEmpty)
+
+#### to filter the non empty strings from RDD ###
+
 filter(z => z.contains("string to search"))
+
+#### to filter for particular strings from RDD ###
