@@ -3,6 +3,8 @@ Understanding Spark Caching or Persistence
 Spark excels at processing in-memory data.  We are going to look at various caching options and their effects, and (hopefully) provide some tips for optimizing Spark memory caching.
 
 
+
+
 When caching in Spark, there are two options
 
 Raw storage
@@ -17,6 +19,9 @@ Here are some differences between the two options
 3.can put pressure in JVM and JVM garbage collection             3.less pressure	   
 4.usage:rdd.persist(StorageLevel.MEMORY_ONLY) or rdd.cache()     4.usage:rdd.persist(StorageLevel.MEMORY_ONLY_SER)
 
+
+
+default storage level is (MEMORY_ONLY)
 
 
 MEMORY_ONLY	
@@ -57,6 +62,33 @@ y.persist(StorageLevel.MEMORY_ONLY)
 or 
 
 y.persist(StorageLevel.DISK_ONLY)
+
+
+
+ex:-  
+
+
+for example if you have already persisted with storage level MEMORY_ONLY and you want to change it to DISK_ONLY. it will not
+allow with error
+
+Cannot change storage level of an RDD after it was already assigned a level
+
+to change you should unpersist first 
+
+to persist :-
+
+import  org.apache.spark.storage.StorageLevel
+
+y.persist(StorageLevel.MEMORY_ONLY)
+
+to unpersist :-
+
+y.unpersist()
+
+now you can assign new storage level once you unpersist
+
+y.persist(StorageLevel.DISK_ONLY)
+
 
 
 
