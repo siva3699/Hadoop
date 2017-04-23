@@ -1,3 +1,31 @@
 1. map(func)
 
 ###Return a new distributed dataset formed by passing each element of the source through a function func ####
+
+
+
+2. filter(func)
+
+##filter(func) returns a new data set (RDD) that's formed by selecting those elements of the source on which the function returns true.##
+
+ex:- 
+
+Spark filter Example Using Scala
+
+scala> val x = sc.parallelize(1 to 10, 2)
+
+// filter operation 
+scala> val y = x.filter(e => e%2==0) 
+scala> y.collect
+res0: Array[Int] = Array(2, 4, 6, 8, 10)
+
+// rdd y can be re written with shorter syntax in scala as 
+scala> val y = x.filter(_ % 2 == 0)
+scala> y.collect
+res1: Array[Int] = Array(2, 4, 6, 8, 10)
+
+As you can see in above example RDD X is the source RDD and contains elements 1 to 5 and has two partitions. 
+Operation filter is take predicate f(x) as an argument which is some thing like x % 2 == 0
+it means it will return true for even elements and false for odd elements. 
+RDD Y is a resulting RDD which will have the filtered (i.e. even elements).
+
