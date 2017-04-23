@@ -41,3 +41,7 @@ filter(z => z.contains("string to search"))
 
 ### to filter lines that contains a particular string. its simillar to like in SQL with %string% #### 
 
+filter(w => !w.contains("string to search"))
+
+### to filter lines that does not contains a particular string. its simillar to not like in SQL with %string% #### 
+
