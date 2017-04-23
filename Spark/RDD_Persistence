@@ -1,1 +1,18 @@
+Understanding Spark Caching or Persistence
 
+Spark excels at processing in-memory data.  We are going to look at various caching options and their effects, and (hopefully) provide some tips for optimizing Spark memory caching.
+
+
+When caching in Spark, there are two options
+
+Raw storage
+Serialized
+Here are some differences between the two options
+
+###Raw caching###	                                               ###Serialized Caching###
+
+1.Pretty fast to process	                                       1.Slower processing than raw caching
+2.Can take up 2x-4x more spaceFor example                        2.Overhead is minimal
+, 100MB data cached could consume 350MB memory
+3.can put pressure in JVM and JVM garbage collection             3.less pressure	   
+4.usage:rdd.persist(StorageLevel.MEMORY_ONLY) or rdd.cache()     4.usage:rdd.persist(StorageLevel.MEMORY_ONLY_SER)
