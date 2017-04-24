@@ -108,6 +108,16 @@ scala> kv.sortByKey(false).collect
 res36: Array[(String, Int)] = Array((orange,2), (banana,3), (apple,2), (apple,1))
 
 
+5. distinct([numTasks]))   
+
+Return a new dataset that contains the distinct elements of the source dataset.
+
+Example 1: Return distinct values from one array.
+scala> val list  = sc.parallelize(List("apple", "orange", "banana", "apple", "orange"))
+scala> list.distinct.collect
+res13: Array[String] = Array(orange, apple, banana)
+
+
 
 
 
