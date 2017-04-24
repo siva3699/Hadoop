@@ -1,1 +1,0 @@
-###This directory contains documents that are needed to prepare for Spark with Scala###
