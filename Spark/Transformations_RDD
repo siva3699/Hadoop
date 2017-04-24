@@ -86,3 +86,14 @@ filter(w => !w.contains("string to search"))
 
 ### to filter RDD's  that does not contains a particular string. its simillar to not like in SQL with %string% #### 
 
+
+
+
+4. sortByKey([ascending], [numTasks])
+
+ex:- 
+
+myrdd.sortByKey(true)
+
+true => ascending
+false => descending
