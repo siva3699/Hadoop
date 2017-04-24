@@ -119,5 +119,45 @@ res13: Array[String] = Array(orange, apple, banana)
 
 
 
+6. coalesce(numPartitions)
+
+Decrease the number of partitions in the RDD to numPartitions. 
+Useful for running operations more efficiently after filtering down a large dataset.
+
+Keep in mind that repartitioning your data is a fairly expensive operation. 
+Spark also has an optimized version of repartition() called coalesce() that allows avoiding data movement, 
+but only if you are decreasing the number of RDD partitions.
+
+One difference I get is that with repartition() the number of partitions can be increased/decreased, 
+but with coalesce() the number of partitions can only be decreased.
+
+If the partitions are spread across multiple machines and coalesce() is run, how can it avoid data movement?
+
+
+It avoids a full shuffle. If it's known that the number is decreasing then the executor can safely keep data on the minimum number of partitions, 
+only moving the data off the extra nodes, onto the nodes that we kept.
+
+So, it would go something like this:
+
+Node 1 = 1,2,3
+Node 2 = 4,5,6
+Node 3 = 7,8,9
+Node 4 = 10,11,12
+Then coalesce down to 2 partitions:
+
+Node 1 = 1,2,3 + (10,11,12)
+Node 3 = 7,8,9 + (4,5,6)
+Notice that Node 1 and Node 3 did not require its original data to move.
+
+
+
+
+coalesce will just combine original partitions to the new number of partitions. 
+In that sense, coalesce will only reduce the number of partitions.
+
+Since shuffling could be very costly, if reduce the number of partitions is what you really want to do, 
+please consider use coalesce.
+
+
 
 
