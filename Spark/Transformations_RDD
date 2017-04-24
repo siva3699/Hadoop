@@ -91,9 +91,23 @@ filter(w => !w.contains("string to search"))
 
 4. sortByKey([ascending], [numTasks])
 
-ex:- 
+When called on a dataset of (K, V) pairs where K implements Ordered, returns a dataset of (K, V) pairs sorted by keys in ascending or descending order, 
+as specified in the boolean ascending argument.
 
 myrdd.sortByKey(true)
 
 true => ascending
 false => descending
+
+
+Example 1:Take above example to sort by key asc or desc.
+scala> kv.sortByKey(true).collect
+res35: Array[(String, Int)] = Array((apple,2), (apple,1), (banana,3), (orange,2))
+
+scala> kv.sortByKey(false).collect
+res36: Array[(String, Int)] = Array((orange,2), (banana,3), (apple,2), (apple,1))
+
+
+
+
+
