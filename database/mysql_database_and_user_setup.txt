@@ -2,17 +2,20 @@
 
 create user 'retail' identified by 'hadoop';
 
-here user is sqoop and password is hadoop
+here user is retail and password is hadoop
 
--- Create new database sqoop
+-- Create new database retail_db
+
 CREATE DATABASE retail_db;
 
 -- Grant all privileges to the new database to created user
+
 GRANT ALL ON retail_db.* to 'retail';
 
 -- in case MySQL runs on local machine
+
 CREATE USER 'retail'@'localhost' IDENTIFIED BY 'retail';
-GRANT ALL ON retail_db.* TO 'sqoop'@'localhost';
+GRANT ALL ON retail_db.* TO 'retail'@'localhost';
 
 
 
