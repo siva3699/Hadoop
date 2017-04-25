@@ -14,3 +14,12 @@ GRANT ALL ON retail_db.* to 'retail';
 CREATE USER 'retail'@'localhost' IDENTIFIED BY 'retail';
 GRANT ALL ON retail_db.* TO 'sqoop'@'localhost';
 
+
+
+---To run sql script file when you are in mysql--
+
+
+mysql> source file_name
+
+
+file  contains the statements you wish to execute.
