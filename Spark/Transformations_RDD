@@ -161,3 +161,33 @@ please consider use coalesce.
 
 
 
+
+7. aggregateByKey(zeroValue)(seqOp, combOp, [numTasks])
+
+
+
+
+/* aggregateByKey takes an initial accumulator (here an empty list),
+   a first lambda function to merge a value to an accumulator, and a
+   second lambda function to merge two accumulators */
+
+      RDD.aggregateByKey(List[Int]())(
+        (aggr, value) => value + aggr,
+        (aggr1, aggr2) => aggr1 + aggr2
+      ).foreach(println)
+      
+      
+      
+      Ex: 1) - 
+      
+      
+      
+      scala> val nameCounts = sc.parallelize(List(("David", 6), ("Abby", 4), ("David", 5), ("Abby", 5)))
+             nameCounts: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[0] at parallelize at <console>:12
+             
+             
+             scala> nameCounts.aggregateByKey(0)((accum, v) => accum + v, (v1, v2) => v1 + v2).collect
+                    res1: Array[(String, Int)] = Array((Abby,9), (David,11))
+      
+      
+    
