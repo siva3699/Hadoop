@@ -1,0 +1,65 @@
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
+import com.typesafe.config._
+import org.apache.hadoop.fs._
+
+
+
+object avg_Revenue {
+  def main(args: Array[String]) {
+    val appConf = ConfigFactory.load()
+    val conf = new SparkConf()
+    .setAppName("avg_revenue")
+    .setMaster(appConf.getConfig(args(2)).getString("deploymentMaster"))
+    
+      for(c <- conf.getAll)
+      println(c._2)
+    
+    val sc = new SparkContext(conf)
+    val inputpath = args(0)
+    val outputpath = args(1)
+    
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val inputPathExists = fs.exists(new Path(inputpath))
+    val outputPathExists = fs.exists(new Path(outputpath))
+    
+        if(!inputPathExists) {
+      println("Invalid input path")
+      return
+    }
+      
+    if(outputPathExists)
+      fs.delete(new Path(outputpath), true)
+      
+     
+      
+      
+      
+      val ordersRDD = sc.textFile(inputpath + "/" + "orders")
+      val orderItemsRDD = sc.textFile(inputpath + "/" + "order_items")
+      
+      val ordersCompleted = ordersRDD.filter( x => (x.split(",")(3)).contains("COMPLETE"))
+      
+      val orders = ordersCompleted.map( x => (x.split(",")(0).toInt,x.split(",")(1)))
+      val order_itemsMap = orderItemsRDD.map( x => (x.split(",")(1).toInt,x.split(",")(4).toFloat))
+      
+      val order_items = order_itemsMap.reduceByKey((x, y) => x + y )
+      
+      val ordersJoin = orders.join(order_items)
+      
+      val ordersJoinMap = ordersJoin.map( x => x._2 )
+      
+      val revenuePerDay = ordersJoinMap.aggregateByKey((0.0, 0))( (acc, value) => (acc._1 + value, acc._2 + 1),(v1, v2) => (v1._1 + v2._1, v1._2 + v2._2) )
+      
+      val AverageRevenuePerDay = revenuePerDay.map( rec => (rec._1,BigDecimal(rec._2._1/rec._2._2).setScale(2, BigDecimal.RoundingMode.HALF_UP).toFloat))
+      
+      val AverageRevenuePerDaySorted = AverageRevenuePerDay.sortByKey()
+      
+      AverageRevenuePerDaySorted.map(rec => rec._1 + "," + rec._2).saveAsTextFile(outputpath)
+      
+      
+  
+        
+  }
+  
+}
