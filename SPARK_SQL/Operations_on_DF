@@ -43,6 +43,12 @@ df.select(df("name"), df("age") + 1).show()
 // Justin  20
 
 
+// use * to select() all columns
+
+customerDF.select("*").show()
+
+
+
 4.filter
 
 
@@ -60,3 +66,21 @@ df.groupBy("age").count().show()
 // null 1
 // 19   1
 // 30   1
+
+
+6. To rename columns in a dataframe
+
+
+// use as() on Column to rename
+
+ customerDF.select(customerDF("id").as("Customer ID"), customerDF("discount").as("Total Discount")).show()
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
