@@ -59,6 +59,16 @@ case class Orders(
     ordersFiltered.printSchema()
     ordersFiltered.show()
     ordersFiltered.select("order_id").show()
+    
+    
+    -- To Register table orders from dataframe ordersDF
+    
+    ordersDF.registerTempTable("orders")
+    
+    
+    --to query from the registered table
+    
+    sqlContext.sql("select * from orders where order_status = 'COMPLETE' limit 10").foreach(println)
      
      
 
