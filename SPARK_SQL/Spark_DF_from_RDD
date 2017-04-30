@@ -1,3 +1,64 @@
 ##################create dataframe from an existing RDD##############################
 
+--packages to be imported
+
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
+import org.apache.hadoop.fs._
+import org.apache.spark.sql._
+import org.apache.spark.sql.functions._
+
+
+--Define case classes. This is schema that you are giving explicitly for the dataframe, that you are going to create from RDD.--
+
+
+case class Orders(
+  order_id: Int,
+  order_date: String,
+  order_customer_id: Int,
+  order_status: String) 
+  
+  
+--Set application name and master--
+   
+   val conf = new SparkConf().
+      setAppName("Example").
+      setMaster("local")
+      
+      
+ ---Create spark context and sql context--
+ 
+ 
+    val sc = new SparkContext(conf)
+    val sqlContext = new SQLContext(sc)
+    sqlContext.setConf("spark.sql.shuffle.partitions", "2")    --this is limit reducers to 2. By default 200 will created to shuffle the data--
+    
+    import sqlContext.implicits._ 
+    
+    
+    --Create RDD from orders rext file--
+    
+    val ordersRDD = sc.textFile("file:///Users/sivakrishnayetukuri/retail_db/orders")
+    
+    
+    ---Create data frames for orders using map function and case classes---
+    
+    
+    val ordersDF = ordersRDD.map( rec => { val a = rec.split(",")
+    Orders(a(0).toInt,a(1).toString(),a(2).toInt,a(3).toString())}).toDF()
+    
+    --now ordersDF is an dataframe created from an existing RDD orderRDD--
+    
+    --to see schema of ordersDF dataframe--
+    
+     ordersDF.printSchema()
+     
+     -----Below are the few operations that can be perfromed on the dataframe-----
+     
+    val ordersFiltered = ordersDF.filter(ordersDF("order_status") === "COMPLETE")
+    ordersFiltered.printSchema()
+    ordersFiltered.show()
+    ordersFiltered.select("order_id").show()
+     
+     
 
