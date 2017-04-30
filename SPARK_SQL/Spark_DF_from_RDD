@@ -47,6 +47,14 @@ case class Orders(
     val ordersDF = ordersRDD.map( rec => { val a = rec.split(",")
     Orders(a(0).toInt,a(1).toString(),a(2).toInt,a(3).toString())}).toDF()
     
+    
+                      or
+                      
+    val ordersDF = ordersRDD.map( rec => rec.split(",") )
+    .map( rec => Orders(rec(0).toInt,rec(1).toString,rec(2).toInt,rec(3).toString) ).toDF()                      
+    
+    
+    
     --now ordersDF is an dataframe created from an existing RDD orderRDD--
     
     --to see schema of ordersDF dataframe--
