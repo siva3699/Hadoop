@@ -76,6 +76,17 @@ df.groupBy("age").count().show()
  customerDF.select(customerDF("id").as("Customer ID"), customerDF("discount").as("Total Discount")).show()
  
  
+ // use $ as shorthand to obtain Column
+ 
+ 
+ customerDF.select($"id".as("Customer ID"), $"discount".as("Total Discount")).show()
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  
