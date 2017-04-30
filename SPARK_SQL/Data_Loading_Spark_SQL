@@ -1,0 +1,53 @@
+##############-- data loading using spark sql --################
+
+
+1.Json file
+
+
+val peopleDF = sqlContext.read.format("json")
+.option("header", "true")
+.option("inferSchema", "true")
+.load("file:///examples/src/main/resources/people.json")
+
+
+
+2. CSV file
+
+
+ Include spark-csv as an sbt dependency
+ 
+ "com.databricks" % "spark-csv_2.10" % "1.3.0",
+ 
+ 
+val baby_namesDF = sqlContext.read.format("com.databricks.spark.csv")
+.option("header", "true")
+.option("inferSchema", "true")
+.load("baby_names.csv")
+
+
+
+// In the above code, we are specifying the desire to use com.databricks.spark.csv format from the package we passed to the shell in step 1. 
+“header” set to true signifies the first row has column names. 
+“inferSchema” instructs Spark to attempt to infer the schema of the CSV and finally load function passes in the path and name of the CSV source file.//
+
+
+
+baby_namesDF.show()
+
+
+//Register a temp table
+
+ 
+scala> baby_namesDF.registerTempTable("names")
+
+
+
+
+
+
+
+
+
+
+
+
