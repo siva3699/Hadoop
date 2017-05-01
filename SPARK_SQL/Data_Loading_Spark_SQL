@@ -42,6 +42,19 @@ scala> baby_namesDF.registerTempTable("names")
 
 
 
+3. parquet
+
+
+
+val peopleDF = sqlContext.read.format("parquet")
+.option("header", "true")
+.option("inferSchema", "true")
+.load("file:///examples/src/main/resources/people.parquet")
+
+
+
+
+
 
 
 
