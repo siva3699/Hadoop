@@ -4,10 +4,7 @@
 1.Json file
 
 
-val peopleDF = sqlContext.read.format("json")
-.option("header", "true")
-.option("inferSchema", "true")
-.load("file:///examples/src/main/resources/people.json")
+val studentDF = sqlContext.read.format("json").load("file:///root/baby.json")
 
 
 
@@ -43,6 +40,11 @@ scala> baby_namesDF.registerTempTable("names")
 
 
 3. parquet
+
+studentDF.write.parquet("file:///root/people.parquet")
+
+
+val studentparDF = sqlContext.read.format("parquet").load("file:///root/people.parquet")
 
 
 
