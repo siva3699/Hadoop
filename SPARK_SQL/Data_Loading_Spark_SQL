@@ -46,20 +46,14 @@ scala> baby_namesDF.registerTempTable("names")
 
 
 
-val peopleDF = sqlContext.read.format("parquet")
-.option("header", "true")
-.option("inferSchema", "true")
-.load("file:///examples/src/main/resources/people.parquet")
+val peopleDF = sqlContext.read.format("parquet").load("file:///examples/src/main/resources/people.parquet")
 
 
 
 4.textfile
 
 
-val peopleDF = sqlContext.read.text
-.option("header", "true")
-.option("inferSchema", "true")
-.load("file:///examples/src/main/resources/people.text")
+val peopleDF = sqlContext.read.format("text").load("file:///examples/src/main/resources/people.text")
 
 
 
