@@ -53,6 +53,18 @@ val peopleDF = sqlContext.read.format("parquet")
 
 
 
+4.textfile
+
+
+val peopleDF = sqlContext.read.text
+.option("header", "true")
+.option("inferSchema", "true")
+.load("file:///examples/src/main/resources/people.text")
+
+
+
+
+
 
 
 
