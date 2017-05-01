@@ -1,0 +1,18 @@
+1. CSV format
+
+
+
+dataFrame.write.format("com.databricks.spark.csv").save("myFile.csv")
+
+
+
+2. ORC format
+
+
+
+dataFrame.write.format("orc").save("people")
+
+
+
+
+3.
