@@ -52,7 +52,18 @@ val peopleDF = sqlContext.read.format("parquet").load("file:///examples/src/main
 
 
 
-4.textfile
+
+4. ORC
+
+
+
+val peopleDF = sqlContext.read.format("orc").load("people")
+
+
+
+
+
+5.textfile
 
 
 val peopleDF = sqlContext.read.format("text").load("file:///examples/src/main/resources/people.text")
