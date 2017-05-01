@@ -31,3 +31,14 @@ dataFrame.write.format("orc").save("people")
 
 
 df.write.format("parquet").save("namesAndAges.parquet")
+
+
+4. AVRO
+
+
+
+dataframe.write.format("com.databricks.spark.avro").save(outputPath)
+
+
+
+5.
