@@ -1,0 +1,93 @@
+STEP.1
+
+GETTING THE DATASET
+
+Now let’s download the dataset with the command below:
+
+wget http://hortonassets.s3.amazonaws.com/tutorial/data/yahoo_stocks.csv
+
+
+STEP.2
+
+
+and copy the downloaded file to HDFS:
+
+hadoop fs -put ./yahoo_stocks.csv /tmp/
+
+
+
+STEP.3
+
+
+STARTING THE SPARK SHELL
+Use the command below to launch the Scala REPL for Apache Spark:
+
+spark-shell
+
+
+
+STEP.4
+
+
+Before we get started with the actual analytics let’s import some of the libraries we are going to use below.
+
+import org.apache.spark.sql.hive.orc._
+import org.apache.spark.sql._
+
+
+
+
+
+STEP.5
+
+
+CREATING HIVECONTEXT
+HiveContext is an instance of the Spark SQL execution engine that integrates with data stored in Hive.
+The more basic SQLContext provides a subset of the Spark SQL support that does not depend on Hive. 
+It reads the configuration for Hive from hive-site.xml on the classpath.
+
+
+val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+
+
+
+
+STEP.6
+
+
+CREATING ORC TABLES
+Specifying as orc at the end of the SQL statement below ensures that the Hive table is stored in the ORC format.
+
+
+
+hiveContext.sql("create table yahoo_orc_table (date STRING, open_price FLOAT, high_price FLOAT, low_price FLOAT, 
+close_price FLOAT, volume INT, adj_price FLOAT) stored as orc")
+
+
+STEP.7
+
+
+LOADING THE FILE AND CREATING A RDD
+
+
+With the command below we instantiate an RDD:
+
+val yahoo_stocks = sc.textFile("hdfs://sandbox.hortonworks.com:8020/tmp/yahoo_stocks.csv")
+
+
+To preview data in yahoo_stocks type:
+
+yahoo_stocks.take(10)
+
+
+
+STEP.8
+
+
+SEPARATING THE HEADER FROM THE DATA
+Let’s assign the first row of the RDD above to a new variable
+
+val header = yahoo_stocks.first
+
+
+
