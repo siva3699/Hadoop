@@ -90,4 +90,112 @@ Let’s assign the first row of the RDD above to a new variable
 val header = yahoo_stocks.first
 
 
+STEP.9
+
+
+
+Now we need to separate the data into a new RDD where we do not have the header above and :
+
+val data = yahoo_stocks.mapPartitionsWithIndex { (idx, iter) => if (idx == 0) iter.drop(1) else iter }
+
+the first row to be seen is indeed only the data in the RDD
+
+data.first
+
+
+
+STEP.10
+
+
+
+CREATING A SCHEMA
+
+
+case class YahooStockPrice(date: String, open: Float, high: Float, low: Float, close: Float, volume: Integer, adjClose: Float)
+
+
+STEP.11
+
+ATTACHING THE SCHEMA TO THE PARSED DATA
+Create an RDD of Yahoo Stock Price objects and register it as a table.
+
+val stockprice = data.map(rec => rec.split(","))
+.map(row => YahooStockPrice(row(0), row(1).trim.toFloat, row(2).trim.toFloat, row(3).trim.toFloat, row(4).trim.toFloat, row(5).trim.toInt, row(6).trim.toFloat)).toDF()
+
+
+To verify the schema, let’s dump the schema:
+
+stockprice.printSchema
+
+
+
+STEP.12
+
+
+REGISTERING A TEMPORARY TABLE
+Now let’s give this RDD a name, so that we can use it in Spark SQL statements:
+
+stockprice.registerTempTable("yahoo_stocks_temp")
+
+
+
+QUERYING AGAINST THE TABLE
+Now that our schema’s RDD with data has a name, we can use Spark SQL commands to query it. 
+Remember the table below is not a Hive table, it is just a RDD we are querying with SQL.
+
+val results = sqlContext.sql("SELECT * FROM yahoo_stocks_temp")
+
+The resultset returned from the Spark SQL query is now loaded in the results RDD.
+Let’s pretty print it out on the command line.
+
+results.map(t => "Stock Entry: " + t.toString).collect().foreach(println)
+
+
+STEP.13
+
+SAVING AS AN ORC FILE
+
+Now let’s persist back the RDD into the Hive ORC table we created before.
+
+results.write.format("orc").save("yahoo_stocks_orc")
+
+To store results in a hive directory rather than user directory, use this path instead:
+
+/apps/hive/warehouse/yahoo_stocks_orc
+
+
+
+
+
+####################################FINAL STEP#############################################
+
+
+
+READING THE ORC FILE
+
+
+Let’s now try to read back the ORC file, we just created back into an RDD. But before we do so, we need a hiveContext:
+
+
+val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+
+
+now we can try to read the ORC file with:
+
+
+val yahoo_stocks_orc = hiveContext.read.format("orc").load("yahoo_stocks_orc")
+
+
+Let’s register it as a temporary in-memory table mapped to the ORC table:
+
+yahoo_stocks_orc.registerTempTable("orcTest")
+
+
+Now we can verify whether we can query it back:
+
+hiveContext.sql("SELECT * from orcTest").collect.foreach(println)
+
+
+
+
 
