@@ -1,0 +1,20 @@
+object BasicQueryExample {
+val sc = SparkCommon.sparkContext
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+ 
+def main(args: Array[String]) {
+ 
+import sqlContext.implicits._
+ 
+val input = sqlContext.read.json("src/main/resources/cars1.json")
+ 
+input.registerTempTable("Cars1")
+ 
+val result = sqlContext.sql("SELECT * FROM Cars1")
+ 
+result.show()
+}
+ 
+}
+ 
+case class Cars1(name: String)                                    #### This is schema for the Temp table we are creating from the dataframe ####
