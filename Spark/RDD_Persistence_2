@@ -1,0 +1,35 @@
+Let's see how to persist RDDs using the following code:
+
+
+val inputRdd = sc.parallelize(Array("this,is,a,ball","it,is,a,cat","julie,is,in,the,church")) 
+val wordsRdd = inputRdd.flatMap(record => record.split(",")) 
+val wordLengthPairs = wordsRdd.map(word before code=> (word, word.length)) 
+val wordPairs = wordsRdd.map(word => (word,1)) 
+val reducedWordCountRdd = wordPairs.reduceByKey((x,y) => x+y) 
+val filteredWordLengthPairs = wordLengthPairs.filter{case(word,length) => length >=3} 
+
+reducedWordCountRdd.cache() 
+
+val joinedRdd = reducedWordCountRdd.join(filteredWordLengthPairs) 
+
+joinedRdd.persist(StorageLevel.MEMORY_AND_DISK) 
+
+val wordPairsCount =  reducedWordCountRdd.count 
+val wordPairsCollection = reducedWordCountRdd.take(10)  
+val joinedRddCount = joinedRdd.count 
+val joinedPairs = joinedRdd.collect() 
+
+reducedWordCountRdd.unpersist() 
+
+joinedRdd.unpersist() 
+How it works…
+
+The call to cache() on reducedWordCountRdd indicates that the RDD should be stored in memory for the next time it's computed. 
+The count action computes it initially.
+When the take action is invoked, it accesses the cached elements of the RDD instead of re-computing them from the dependencies.
+
+Spark defines levels of persistence or StorageLevel values for persisting RDDs. 
+rdd.cache() is shorthand for rdd.persist(StorageLevel.MEMORY). 
+
+In the preceding example, joinedRdd is persisted with storage level as MEMORY_AND_DISK which indicates persisting the RDD in memory as well as in disk. 
+It is good practice to un-persist the RDD at the end, which lets us manually remove it from the cache.
