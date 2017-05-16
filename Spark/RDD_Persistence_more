@@ -22,6 +22,8 @@ val joinedPairs = joinedRdd.collect()
 reducedWordCountRdd.unpersist() 
 
 joinedRdd.unpersist() 
+
+
 How it works…
 
 The call to cache() on reducedWordCountRdd indicates that the RDD should be stored in memory for the next time it's computed. 
@@ -33,3 +35,7 @@ rdd.cache() is shorthand for rdd.persist(StorageLevel.MEMORY).
 
 In the preceding example, joinedRdd is persisted with storage level as MEMORY_AND_DISK which indicates persisting the RDD in memory as well as in disk. 
 It is good practice to un-persist the RDD at the end, which lets us manually remove it from the cache.
+
+
+
+
