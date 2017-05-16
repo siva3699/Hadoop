@@ -1,5 +1,6 @@
 Let's see how to persist RDDs using the following code:
 
+import org.apache.spark.storage.StorageLevel._
 
 val inputRdd = sc.parallelize(Array("this,is,a,ball","it,is,a,cat","julie,is,in,the,church")) 
 val wordsRdd = inputRdd.flatMap(record => record.split(",")) 
