@@ -1,0 +1,60 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf820
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c100000;}
+\margl1440\margr1440\vieww28600\viewh17520\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \cb3 \CocoaLigature0 import org.apache.spark.SparkContext\
+\
+import org.apache.spark.SparkConf\
+\
+import org.apache.spark.sql.functions._\
+\
+import org.apache.spark.sql.SQLContext\
+\
+import org.apache.spark.sql.hive.HiveContext\
+\
+import org.apache.spark.sql.hive.orc\
+\
+\
+val ordersRDD = sc.textFile("file:///root/retail_db/orders")\
+\
+import sqlContext.implicits._\
+\
+case class ORDERS(order_id: Int,order_date: String,order_customer_id: Int, order_status: String)\
+\
+\
+val ordersDF = ordersRDD.map(rec => rec.split(",")).map( rec => ORDERS(rec(0).toInt,rec(1).toString,rec(2).toInt,rec(3).toString)).toDF()\
+\
+case class ORDER_ITEMS(order_item_id: Int,order_item_order_id: Int,order_item_product_id: Int,order_item_quantity: Int,order_item_subtotal: Float,order_item_product_price: Float)\
+\
+val order_itemsDF = sc.textFile("file:///root/retail_db/order_items").map( rec => rec.split(",")).map( rec => ORDER_ITEMS(rec(0).toInt,rec(1).toInt,rec(2).toInt,rec(3).toInt,rec(4).toFloat,rec(5).toFloat)).toDF()\
+\
+\
+val ordersFilteredDF = ordersDF.filter(ordersDF("order_status") === "COMPLETE")\
+\
+val ordersJoin = ordersFilteredDF.join(order_itemsDF, ordersFilteredDF("order_id") === order_itemsDF("order_item_order_id"))\
+\
+\
+val s = ordersJoinDF.groupBy(ordersJoinDF("order_date"),ordersJoinDF("order_id")).agg(avg(ordersJoinDF("order_item_subtotal")).as("Avg_rev"))\
+\
+\
+val s1 = s.withColumn("Avg_rev", 'Avg_rev.cast("Float"))\
+\
+\
+val s1 = s.withColumn("Avg_rev", round($"Avg_rev", 2))\
+\
+or \
+\
+val s1 = s.withColumn("Avg_rev", round(s("Avg_rev"), 2))\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
