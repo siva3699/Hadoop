@@ -1,3 +1,6 @@
+    
+    val file = sc.textFile(inputFile)
+    
     file.foreach(line => {             // side-effecting only
       if (line.contains("KK6JKQ")) {
         count += 1
